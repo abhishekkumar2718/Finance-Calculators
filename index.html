@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Calculate Present, Future and Annual Values.">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Financial Value Calculator</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Finance Value Calculator</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="depreciation_calculator.html">Depreciation Calculator</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1>Financial Value Calculator</h1>
+
+      <p class="text-muted">
+        Calculate Present, Future and Annual Values.
+      </p>
+
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-body">
+            <form>
+              <div class="form-group row">
+                <label for="from_type" class="col-sm-4 col-form-label">
+                  From
+                </label>
+
+                <div class="col-sm-8">
+                  <select class="form-control" name="from_type" id="from_type">
+                    <option value="Annual Value">
+                      Annual Value
+                    </option>
+
+                    <option value="Future Value">
+                      Future Value
+                    </option>
+
+                    <option value="Present Value">
+                      Present Value
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="from_principal" class="col-sm-4 col-form-label">
+                  Principal
+                </label>
+
+                <div class="col-sm-8">
+                  <input type="number" name="from_principal" id="from_principal" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="from_rate" class="col-sm-4 col-form-label">
+                  Rate
+                </label>
+
+                <div class="col-sm-8">
+                  <input type="number" name="from_rate" id="from_rate" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="from_periods" class="col-sm-4 col-form-label">
+                  Periods
+                </label>
+
+                <div class="col-sm-8">
+                  <input type="number" name="from_periods" id="from_periods" class="form-control">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <form>
+              <div class="form-group row">
+                <label for="to_type" class="col-sm-4 col-form-label">
+                  To
+                </label>
+
+                <div class="col-sm-8">
+                  <select class="form-control" name="to_type" id="to_type">
+                    <option value="Annual Value">
+                      Annual Value
+                    </option>
+
+                    <option value="Future Value">
+                      Future Value
+                    </option>
+
+                    <option value="Present Value">
+                      Present Value
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </form>
+
+            <div class="text-center">
+              <p id="calculated_value" class="display-2"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <img src="cheatsheet.jpeg" class="card-img-top" alt="cheatsheet">
+        </div>
+
+        <div class="card-footer text-muted text-center">
+          Cheat Sheet
+        </div>
+      </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+      $('.form-control').change(function() {
+        let from_type = $("#from_type").val();
+        let from_principal = parseFloat($("#from_principal").val());
+        let from_rate = parseFloat($("#from_rate").val());
+        let from_periods = parseFloat($("#from_periods").val());
+
+        let to_type = $("#to_type").val();
+
+        let calculated_value;
+
+        $("#calculated_value").html('');
+
+        if (isNaN(from_principal) || isNaN(from_rate) || isNaN(from_periods))
+          return;
+
+        if (from_type == to_type)
+          return;
+
+        from_rate = from_rate / 100;
+
+        if (from_type == "Annual Value") {
+          if (to_type == "Future Value")
+            calculated_value = from_principal * ((Math.pow(1 + from_rate, from_periods) - 1) / from_rate);
+          else
+            calculated_value = from_principal * ((Math.pow(1 + from_rate, from_periods) - 1) / (from_rate * Math.pow(1 + from_rate, from_periods)));
+        } else if (from_type == "Future Value") {
+          if (to_type == "Annual Value")
+            calculated_value = from_principal * (from_rate / (Math.pow(1 + from_rate, from_periods) - 1));
+          else
+            calculated_value = from_principal / Math.pow(1 + from_rate, from_periods);
+        } else {
+          if (to_type == "Annual Value")
+            calculated_value = from_principal * ((from_rate * Math.pow(1 + from_rate, from_periods)) / (Math.pow(1 + from_rate, from_periods) - 1));
+          else
+            calculated_value = from_principal * Math.pow(1 + from_rate, from_periods);
+        }
+
+        $("#calculated_value").html(calculated_value.toFixed(3));
+      });
+    </script>
+  </body>
+</html>
