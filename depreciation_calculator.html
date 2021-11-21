@@ -191,7 +191,7 @@
           else if (useful_life == 5)
             depreciation_rates.push(20.00, 32.00, 19.20, 11.52, 11.52, 5.76);
           else if (useful_life == 7)
-            depreciation_rates.push(14.29, 24.49, 17.49, 12.49, 8.93, 8.93, 4.46);
+            depreciation_rates.push(14.29, 24.49, 17.49, 12.49, 8.93, 8.92, 8.93, 4.46);
           else
             return;
 
@@ -213,15 +213,12 @@
           let salvage_value = parseFloat($("#salvage_value").val());
           let initial_depreciation_rate = parseFloat($("#initial_depreciation_rate").val());
 
-          if ([initial_book_value, useful_life, salvage_value].some((element) => isNaN(element)))
+          if (!isNaN(useful_life)) {
+            $("#depreciation_rate_suggestion").html(`${(200 / useful_life).toFixed(3)}`);
+          }
+
+          if ([initial_book_value, useful_life, salvage_value, initial_depreciation_rate].some((element) => isNaN(element)))
             return ;
-
-          let straight_line_depreciation_rate = ((initial_book_value - salvage_value) * 100) / (initial_book_value * useful_life);
-
-          $("#depreciation_rate_suggestion").html(`${(2 * straight_line_depreciation_rate).toFixed(3)}`);
-
-          if (isNaN(initial_depreciation_rate))
-            return;
 
           for (let i = 0; i < useful_life; i++) {
             let depreciation_amount = current_book_value * initial_depreciation_rate / 100;
