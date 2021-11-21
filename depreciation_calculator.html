@@ -101,6 +101,10 @@
               <div class="col-sm-8">
                 <input type="number" name="initial_depreciation_rate" id="initial_depreciation_rate" class="form-control">
               </div>
+
+              <small class="form-text text-muted col-sm-4">
+                Suggested Depreciation Rate: <span id="depreciation_rate_suggestion"></span>
+              </small>
             </div>
           </form>
         </div>
@@ -209,8 +213,15 @@
           let salvage_value = parseFloat($("#salvage_value").val());
           let initial_depreciation_rate = parseFloat($("#initial_depreciation_rate").val());
 
-          if ([initial_book_value, useful_life, salvage_value, initial_depreciation_rate].some((element) => isNaN(element)))
+          if ([initial_book_value, useful_life, salvage_value].some((element) => isNaN(element)))
             return ;
+
+          let straight_line_depreciation_rate = ((initial_book_value - salvage_value) * 100) / (initial_book_value * useful_life);
+
+          $("#depreciation_rate_suggestion").html(`${(2 * straight_line_depreciation_rate).toFixed(2)}`);
+
+          if (isNaN(initial_depreciation_rate))
+            return;
 
           for (let i = 0; i < useful_life; i++) {
             let depreciation_amount = current_book_value * initial_depreciation_rate / 100;
