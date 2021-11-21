@@ -116,7 +116,7 @@
         </div>
 
         <div class="card-body">
-          <table class="table">
+          <table class="table table-striped table-hover">
             <thead>
               <tr id="yearly_depreciation_head"></tr>
             </thead>
@@ -154,7 +154,7 @@
         let initial_book_value = parseFloat($("#initial_book_value").val());
         let useful_life = parseInt($("#useful_life").val());
 
-        let headers = ["Year", "Initial Book Value", "Depreciation Rate", "Depreciation Amount", "Accumualated Depreciation", "Current Book Value"];
+        let headers = ["Year", "Initial Book Value", "Depreciation Rate", "Depreciation Amount", "Accumulated Depreciation", "Current Book Value"];
         let rows = [];
 
         let current_book_value = initial_book_value;
