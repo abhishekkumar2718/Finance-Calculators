@@ -124,7 +124,8 @@
             </form>
 
             <div class="text-center">
-              <p id="calculated_value" class="display-2"></p>
+              <p id="calculated_value" class="display-4"></p>
+              <p id="coefficient" class="display-4"></p>
             </div>
           </div>
         </div>
@@ -155,9 +156,10 @@
 
         let to_type = $("#to_type").val();
 
-        let calculated_value;
+        let coefficient;
 
         $("#calculated_value").html('');
+        $("#coefficient").html('');
 
         if (isNaN(from_principal) || isNaN(from_rate) || isNaN(from_periods))
           return;
@@ -169,22 +171,25 @@
 
         if (from_type == "Annual Value") {
           if (to_type == "Future Value")
-            calculated_value = from_principal * ((Math.pow(1 + from_rate, from_periods) - 1) / from_rate);
+            coefficient = ((Math.pow(1 + from_rate, from_periods) - 1) / from_rate);
           else
-            calculated_value = from_principal * ((Math.pow(1 + from_rate, from_periods) - 1) / (from_rate * Math.pow(1 + from_rate, from_periods)));
+            coefficient = ((Math.pow(1 + from_rate, from_periods) - 1) / (from_rate * Math.pow(1 + from_rate, from_periods)));
         } else if (from_type == "Future Value") {
           if (to_type == "Annual Value")
-            calculated_value = from_principal * (from_rate / (Math.pow(1 + from_rate, from_periods) - 1));
+            coefficient = (from_rate / (Math.pow(1 + from_rate, from_periods) - 1));
           else
-            calculated_value = from_principal / Math.pow(1 + from_rate, from_periods);
+            coefficient = 1 / Math.pow(1 + from_rate, from_periods);
         } else {
           if (to_type == "Annual Value")
-            calculated_value = from_principal * ((from_rate * Math.pow(1 + from_rate, from_periods)) / (Math.pow(1 + from_rate, from_periods) - 1));
+            coefficient = ((from_rate * Math.pow(1 + from_rate, from_periods)) / (Math.pow(1 + from_rate, from_periods) - 1));
           else
-            calculated_value = from_principal * Math.pow(1 + from_rate, from_periods);
+            coefficient = Math.pow(1 + from_rate, from_periods);
         }
 
-        $("#calculated_value").html(calculated_value.toFixed(3));
+        let calculated_value = from_principal * coefficient;
+
+        $("#coefficient").html(coefficient.toFixed(3));
+        $("#calculated_value").html(calculated_value.toExponential(3));
       });
     </script>
   </body>
