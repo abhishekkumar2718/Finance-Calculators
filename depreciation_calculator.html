@@ -59,6 +59,10 @@
                   <option value="DDB">
                     Double Declining Balance
                   </option>
+
+                  <option value="SOYD">
+                    Sum-of-Year's Digits
+                  </option>
                 </select>
               </div>
             </div>
@@ -140,7 +144,7 @@
 
         $(".optional-form-group").hide();
 
-        if (depreciation_method == "SL") {
+        if (depreciation_method == "SL" || depreciation_method == "SOYD") {
           $("#salvage_value_form_group").show();
         } else if (depreciation_method == "DDB") {
           $("#salvage_value_form_group").show();
@@ -239,7 +243,29 @@
 
             current_book_value = current_book_value - depreciation_amount;
           }
-        }
+          } else if (depreciation_method == "SOYD") {
+            let salvage_value = parseFloat($("#salvage_value").val());
+            let soyd = useful_life * (useful_life + 1)/2;
+
+            if ([initial_book_value, useful_life, salvage_value].some((element) => isNaN(element)))
+              return ;
+
+            for (let i = 0; i < useful_life; i++) {
+              let depreciation_amount = (initial_book_value - salvage_value)  * (useful_life - i) / soyd;
+              let depreciation_rate = depreciation_amount * 100 / current_book_value;
+
+              rows.push([
+                i + 1,
+                current_book_value.toFixed(3),
+                `${depreciation_rate.toFixed(3)}%`,
+                depreciation_amount.toFixed(3),
+                (initial_book_value - (current_book_value - depreciation_amount)).toFixed(3),
+                (current_book_value - depreciation_amount).toFixed(3)
+              ]);
+
+              current_book_value = current_book_value - depreciation_amount;
+            }
+          }
 
         $("#yearly_depreciation_head").html('');
         headers.forEach(function(item, index, array) {
